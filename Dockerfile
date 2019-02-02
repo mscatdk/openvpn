@@ -9,12 +9,13 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/reposi
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* && \
     adduser -D -u 1000 vpn
 
-RUN mkdir ${APP_HOME}/clients && \
-    mkdir ${APP_HOME}/secret && \
-    mkdir ${APP_HOME}/public
-
 COPY config/ ${APP_HOME}
 COPY config/vars ${EASYRSA_HOME}
+
+RUN mkdir ${APP_HOME}/clients && \
+    mkdir ${APP_HOME}/secret && \
+    mkdir ${APP_HOME}/public && \
+    chmod +x ${APP_HOME}/*.sh
 
 VOLUME ["/home/vpn"]
 
