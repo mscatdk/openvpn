@@ -4,9 +4,17 @@ function generate_keys() {
     pushd $VPN_HOME
 
     echo Create keys for ${CLIENT_NAME}
-    
+
     # Create key-pair and certificate
     echo -en "\n\n" | ${EASYRSA_HOME}/easyrsa gen-req ${CLIENT_NAME} nopass
+
+    if [ -z "$PASSPHRASE_MODE" ]
+    then
+        echo -n Passphrase:
+        read -s passphrase
+        openssl rsa -aes256 -in $VPN_HOME/pki/private/${CLIENT_NAME}.key -out $VPN_HOME/pki/private/${CLIENT_NAME}.key -passout pass:$passphrase
+    fi
+
     echo -en "yes\n\n" | ${EASYRSA_HOME}/easyrsa sign-req client ${CLIENT_NAME}
 
     popd
@@ -17,7 +25,7 @@ function create_ovpn() {
 client
 dev tun
 proto udp
-remote 10.11.12.74 1194
+remote $(cat $VPN_HOME/hostname) 1194
 resolv-retry infinite
 nobind
 persist-key
@@ -49,6 +57,7 @@ then
 fi
 
 export CLIENT_NAME=$1
+export PASSPHRASE_MODE=$2
 
 mkdir -p ${VPN_HOME}/ovpn
 generate_keys

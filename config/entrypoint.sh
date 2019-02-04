@@ -55,6 +55,16 @@ if [ ! -c /dev/net/tun ]; then
    create_interface
 fi
 
+if [ ! -z "$OPENVPN_HOSTNAME" ]; then
+    echo setting hostname to: $OPENVPN_HOSTNAME
+    echo $OPENVPN_HOSTNAME > ${VPN_HOME}/hostname
+fi
+
+if [ ! -f ${VPN_HOME}/hostname ]; then
+    echo "OPENVPN_HOSTNAME wasn't set; hence, localhost is used"
+    echo localhost > ${VPN_HOME}/hostname
+fi
+
 update_iptables
 
 start_openvpn_server
