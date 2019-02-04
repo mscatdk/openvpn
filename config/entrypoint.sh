@@ -42,7 +42,14 @@ function update_iptables() {
 
 function start_openvpn_server() {
     # Start the openvpn server
-    openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/clients
+    openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/clients --crl-verify /etc/openvpn/crl.pem
+}
+
+function create_crl() {
+    pushd $VPN_HOME
+    ${EASYRSA_HOME}/easyrsa gen-crl
+    cp ${VPN_HOME}/pki/crl.pem ${APP_HOME}/crl.pem
+    popd
 }
 
 if [ ! -d ${VPN_HOME}/pki ]; then
@@ -64,6 +71,8 @@ if [ ! -f ${VPN_HOME}/hostname ]; then
     echo "OPENVPN_HOSTNAME wasn't set; hence, localhost is used"
     echo localhost > ${VPN_HOME}/hostname
 fi
+
+create_crl
 
 update_iptables
 
