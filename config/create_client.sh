@@ -21,6 +21,7 @@ function generate_keys() {
 }
 
 function create_ovpn() {
+    rm -rf ${VPN_HOME}/ovpn/${CLIENT_NAME}.ovpn
     echo "
 client
 dev tun
@@ -39,7 +40,7 @@ auth SHA256
 $(cat $VPN_HOME/pki/ca.crt)
 </ca>
 <cert>
-$(cat $VPN_HOME/pki/issued/${CLIENT_NAME}.crt)
+$(cat $VPN_HOME/pki/issued/${CLIENT_NAME}.crt | sed -n '/-----BEGIN CERTIFICATE-----*/,/-----BEGIN CERTIFICATE-----/p')
 </cert>
 <key>
 $(cat $VPN_HOME/pki/private/${CLIENT_NAME}.key)
@@ -59,6 +60,13 @@ fi
 export CLIENT_NAME=$1
 export PASSPHRASE_MODE=$2
 
+if [ -f "${VPN_HOME}/ovpn/${CLIENT_NAME}.ovpn" ]
+then
+    echo "Client already exists!"
+    exit
+fi
+
 mkdir -p ${VPN_HOME}/ovpn
 generate_keys
 create_ovpn
+cat ${VPN_HOME}/ovpn/${CLIENT_NAME}.ovpn
