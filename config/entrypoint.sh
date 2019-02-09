@@ -48,7 +48,8 @@ function start_openvpn_server() {
 function create_crl() {
     pushd $VPN_HOME
     ${EASYRSA_HOME}/easyrsa gen-crl
-    cp ${VPN_HOME}/pki/crl.pem ${APP_HOME}/crl.pem
+    chmod 644 ${VPN_HOME}/pki/crl.pem
+    ln -s ${VPN_HOME}/pki/crl.pem ${APP_HOME}/crl.pem
     popd
 }
 
