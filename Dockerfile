@@ -4,7 +4,7 @@ ENV APP_HOME=/etc/openvpn
 ENV VPN_HOME=/home/vpn
 ENV EASYRSA_HOME=/usr/share/easy-rsa
 
-RUN apk add --update bash iptables openvpn easy-rsa openvpn-auth-pam && \
+RUN apk add --update bash iptables openvpn easy-rsa --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* && \
     adduser -D -u 1000 vpn
 
