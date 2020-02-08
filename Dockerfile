@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.9.5
 
 ENV APP_HOME=/etc/openvpn
 ENV VPN_HOME=/home/vpn
