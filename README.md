@@ -7,7 +7,8 @@ This is a dockerization of OpenVPN for multiple platforms. Key-pairs, keys and c
 The container is build using the following command
 
 ```bash
-docker build . -t mscatdk/openvpn
+docker buildx create --use
+docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag mscatdk/openvpn:latest .
 ```
 
 ## Running OpenVPN
